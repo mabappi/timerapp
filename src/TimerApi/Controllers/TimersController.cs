@@ -12,6 +12,7 @@ namespace TimerApi.Controllers
         public TimersController(ILogger<TimersController> logger)
         {
             _logger = logger;
+            _logger.LogInformation("Testing Log");
         }
 
         [HttpGet("{id}")]

@@ -1,6 +1,23 @@
 version: '3.4'
 
 services:
+  logs:
+    image: datalust/seq:latest
+    container_name: logs
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    volumes:
+      - /logs:/logs
+    environment:
+      - ACCEPT_EULA=Y
+    networks:
+      - vlan
+    ports:
+      - "8082:80"
+      - "5341:5341"  
+
   timerapi:
     image: ${DOCKER_REGISTRY-}timerapi
     container_name: timerapi
@@ -13,6 +30,8 @@ services:
     ports:
       - "8081:80"
       - "4431:443"
+    depends_on:
+      - logs
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
