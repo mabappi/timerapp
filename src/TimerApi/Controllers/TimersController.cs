@@ -1,24 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
+using TimerApi.ApiModels;
+using TimerApi.Services;
 
-namespace TimerApi.Controllers
+namespace TimerApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class TimersController : Controller
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class TimersController : Controller
+
+    private readonly ILogger<TimersController> _logger;
+    private readonly ITimerService _timerService;
+
+    public TimersController(ILogger<TimersController> logger, ITimerService timerService)
     {
-
-        private readonly ILogger<TimersController> _logger;
-
-        public TimersController(ILogger<TimersController> logger)
-        {
-            _logger = logger;
-            _logger.LogInformation("Testing Log");
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute]string id) => Json(new { id, time_left = 1 });
-
-        [HttpPost]
-        public async Task<IActionResult> Set() => Json(new {id = 1});
+        _logger = logger;
+        _timerService = timerService;
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetTimer([FromRoute]string id) => Json(new { id, time_left = await _timerService.GetTimer(id) });
+
+    [HttpPost]
+    public async Task<IActionResult> SetTimer(SetTimerRequest request) => Json(new {id = await _timerService.SetTimer(request)});
 }

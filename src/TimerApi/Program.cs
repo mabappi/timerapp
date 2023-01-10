@@ -1,4 +1,5 @@
 using Serilog;
+using TimerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext()
     .WriteTo.Console());
 
+builder.Services.AddScoped<ITimerService, TimerService>();
 builder.Services.AddControllers();
 builder.Services
     .AddEndpointsApiExplorer()
