@@ -1,4 +1,5 @@
 using Serilog;
+using TimerApi.Middlewares;
 using TimerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllers();
 app.UseSwagger();
