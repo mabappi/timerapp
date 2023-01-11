@@ -1,6 +1,22 @@
 version: '3.4'
 
 services:
+  mariadb:
+    image: mariadb:10.9
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: MyPassword
+      MYSQL_DATABASE: timerappdb
+      MYSQL_USER: apiuser
+      MYSQL_PASSWORD: MyPassword
+    networks:
+      - vlan
+    restart: on-failure
+    ports:
+      - 3306:3306
+    volumes:
+     - ./mariadb:/var/lib/mysql
+
   logs:
     image: datalust/seq:latest
     container_name: logs
@@ -32,6 +48,7 @@ services:
       - "4431:443"
     depends_on:
       - logs
+      - mariadb
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using TimerApi.Middlewares;
+using TimerApi.QuartzFacade;
 using TimerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,10 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Services(services)
     .Enrich.FromLogContext()
     .WriteTo.Console());
+var connectionString =
+builder.Configuration.GetConnectionString(QuartzDbContext.ConnectionString) ?? string.Empty;
+builder.Services.AddDbContext<QuartzDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped<ITimerService, TimerService>();
 builder.Services.AddControllers();
