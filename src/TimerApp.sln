@@ -9,7 +9,13 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E8A27E5B-2DAA-4872-B25D-BFCA1C4AF787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AcceptanceTests", "AcceptanceTests\AcceptanceTests.csproj", "{71D1A1EB-A5A9-4DD1-920E-B2851F873117}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcceptanceTests", "AcceptanceTests\AcceptanceTests.csproj", "{71D1A1EB-A5A9-4DD1-920E-B2851F873117}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01. Services", "01. Services", "{7E450450-CEC9-437C-8A2D-B0EA7C78ABFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02. AutomatedTests", "02. AutomatedTests", "{D2E2A445-4EA4-42BA-A5E2-0777DE3CBF1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03. Deployment", "03. Deployment", "{D80EDE34-4CA6-47F8-9F3E-D9E0785618AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +42,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{612F9C49-FEEC-4854-8ADD-D5063A728F2A} = {7E450450-CEC9-437C-8A2D-B0EA7C78ABFF}
+		{9C397F85-745F-4CBD-9370-5B86E4D6219C} = {D80EDE34-4CA6-47F8-9F3E-D9E0785618AC}
+		{E8A27E5B-2DAA-4872-B25D-BFCA1C4AF787} = {D2E2A445-4EA4-42BA-A5E2-0777DE3CBF1F}
+		{71D1A1EB-A5A9-4DD1-920E-B2851F873117} = {D2E2A445-4EA4-42BA-A5E2-0777DE3CBF1F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B416DA8-B739-41BC-8BF7-5D333DB4F9CA}
