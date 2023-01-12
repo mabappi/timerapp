@@ -7,29 +7,16 @@ The Get timer status take the id and returns the status time left of the call ba
 Background: 
 	Given The Rest Api endpoint is live
 
-Scenario: Call the set timer 
-	When Set timer is called with no JSON payload
-	Then Should return Bad Request
+Scenario: Setting the timer
 	When Set timer is called with empty Callback url
 	Then Should return Bad Request
 	When Set timer is called with 0 hours 1 minute and 0 seconds and callback url "https://google.com"
 	Then Should return an Id
-	And the url should be called after 1 minute
+	When Get tiemer status API is called using the Id
+	Then Should return JSON data with Id and the time left should be less then 1 minutes
 	When Set timer is called with 0 hours 0 minute and 0 seconds and callback url "https://google.com"
 	Then Should return an Id
-	And the url should be called immetiately
-
-Scenario: Call get timer API
-	When Get timer is call with empty Id
-	Then Should return Bad Request
+	When Get tiemer status API is called using the Id
+	Then Should return JSON data with Id and the time left should be 0 minute
 	When Get timer is call with a not known Id 
 	Then Should return Not Found
-	Given Set timer is call with 0 hours 1 minute and 0 seconds and callback url "https://google.com"
-	Then Should return an Id
-	When Get tiemer status API is called using the Id
-	Then Should return JSON data with Id and the time left should be less then 1 minute
-	Given Set timer is call with 0 hours 1 minute and 0 seconds and callback url "https://google.com"
-	Then Should return an Id
-	Then Wait for 1 minute
-	When Get timer status API is called using the Id
-	Then Should return JSON data with Id and the time left should be 0 minutes

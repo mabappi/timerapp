@@ -1,119 +1,112 @@
+using AcceptanceTests.Support;
 using RestSharp;
+using System.Net;
+using TimerApi.ApiModels;
 
 namespace AcceptanceTests.StepDefinitions;
 
 [Binding]
 public sealed class TimerStepDefinitions
 {
-    private string _url = "";
+    private const string Response = "response";
+    private const string Id = "id";
+
+    private readonly ScenarioContext _context;
+
+    public TimerStepDefinitions(ScenarioContext context) => _context = context;
+
     [Given(@"The Rest Api endpoint is live")]
     public async Task GivenTheRestApiEndpointIsLive()
     {
         using var client = new HttpClient();
-        using var response = await client.GetAsync(_url);
+        using var response = await client.GetAsync($"{ConfigurationHelper.ApiUrl}health");
         response.EnsureSuccessStatusCode();
     }
 
     [When(@"Set timer is called with no JSON payload")]
-    public void WhenSetTimerIsCalledWithNoJSONPayload()
-    {
-        throw new PendingStepException();
-    }
+    public async Task WhenSetTimerIsCalledWithNoJSONPayload() =>
+        _context[Response] = await CallSetTimer(null);
 
     [Then(@"Should return Bad Request")]
-    public void ThenShouldReturnBadRequest()
-    {
-        throw new PendingStepException();
-    }
+    public void ThenShouldReturnBadRequest() => ((RestResponse)_context[Response]).StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
     [When(@"Set timer is called with empty Callback url")]
-    public void WhenSetTimerIsCalledWithEmptyCallbackUrl()
-    {
-        throw new PendingStepException();
-    }
+    public async Task WhenSetTimerIsCalledWithEmptyCallbackUrl() => 
+          _context[Response] = await CallSetTimer(CreateTimerRequest(0, 0, 0, ""));
 
     [When(@"Set timer is called with (.*) hours (.*) minute and (.*) seconds and callback url ""([^""]*)""")]
-    public void WhenSetTimerIsCalledWithHoursMinuteAndSecondsAndCallbackUrl(int p0, int p1, int p2, string p3)
-    {
-        throw new PendingStepException();
-    }
+    public async Task WhenSetTimerIsCalledWithHoursMinuteAndSecondsAndCallbackUrl(int hours, int minutes, int seconds, string url) =>
+        _context[Response] = await CallSetTimer(CreateTimerRequest(hours, minutes, seconds, url));
 
     [Then(@"Should return an Id")]
     public void ThenShouldReturnAnId()
     {
-        throw new PendingStepException();
+        var response = _context[Response] as RestResponse<SetTimerResponse>;
+        response.IsSuccessful.Should().BeTrue();
+        response.Data.Id.Should().NotBeNullOrEmpty();
+        _context[Id] = response.Data.Id;
+    }
+    [When(@"Get tiemer status API is called using the Id")]
+    public async Task WhenGetTiemerStatusAPIIsCalledUsingTheId()
+    {
+        _context["response"] = await CallGetTimer(_context[Id] as string);
     }
 
-    [Then(@"the url should be called after (.*) minute")]
-    public void ThenTheUrlShouldBeCalledAfterMinute(int p0)
-    {
-        throw new PendingStepException();
+    [Then(@"Should return JSON data with Id and the time left should be less then (.*) minutes")]
+    public void ThenShouldReturnJSONDataWithIdAndTheTimeLeftShouldBeLessThenMinutes(int minutes)
+    {        
+        var response = _context[Response] as RestResponse<GetTimerResponse>;
+        response.Data.Id.Should().BeEquivalentTo(_context[Id] as string);
+        response.Data.time_left.Should().BeLessThan(minutes * 60);
     }
 
-    [Then(@"the url should be called immetiately")]
-    public void ThenTheUrlShouldBeCalledImmetiately()
+    [Then(@"Should return JSON data with Id and the time left should be (.*) minute")]
+    public void ThenShouldReturnJSONDataWithIdAndTheTimeLeftShouldBeMinute(int minute)
     {
-        throw new PendingStepException();
+        var response = _context[Response] as RestResponse<GetTimerResponse>;
+        response.Data.Id.Should().BeEquivalentTo(_context[Id] as string);
+        response.Data.time_left.Should().Be(minute);
     }
 
     [When(@"Get timer is call with empty Id")]
-    public void WhenGetTimerIsCallWithEmptyId()
+    public async Task WhenGetTimerIsCallWithEmptyId()
     {
-        throw new PendingStepException();
+        _context[Response] = await CallGetTimer("");
     }
 
     [When(@"Get timer is call with a not known Id")]
-    public void WhenGetTimerIsCallWithANotKnownId()
+    public async Task WhenGetTimerIsCallWithANotKnownId()
     {
-        throw new PendingStepException();
+        _context[Response] = await CallGetTimer("invalidid");
     }
 
     [Then(@"Should return Not Found")]
     public void ThenShouldReturnNotFound()
     {
-        throw new PendingStepException();
+        var response = _context[Response] as RestResponse<GetTimerResponse>;
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
-    [Given(@"Set timer is call with (.*) hours (.*) minute and (.*) seconds and callback url ""([^""]*)""")]
-    public void GivenSetTimerIsCallWithHoursMinuteAndSecondsAndCallbackUrl(int p0, int p1, int p2, string p3)
-    {
-        throw new PendingStepException();
-    }
+    private async Task<RestResponse<SetTimerResponse>> CallSetTimer(SetTimerRequest request) =>
+        await new RestClient().ExecuteAsync<SetTimerResponse> (new RestRequest(ConfigurationHelper.TimersUrl).AddJsonBody(request), Method.Post);
+    private async Task<RestResponse<GetTimerResponse>> CallGetTimer(string id) =>
+        await new RestClient().ExecuteAsync<GetTimerResponse>(new RestRequest($"{ConfigurationHelper.TimersUrl}/{id}"), Method.Get);
 
-    [When(@"Get tiemer status API is called using the Id")]
-    public void WhenGetTiemerStatusAPIIsCalledUsingTheId()
+    private SetTimerRequest CreateTimerRequest(int hours, int minutes, int seconds, string url) =>
+        new SetTimerRequest
+        {
+            Hours = hours,
+            Minutes = minutes,
+            Seconds = seconds,
+            CallbackUrl = url
+        };
+    private class SetTimerResponse
     {
-        throw new PendingStepException();
+        public string Id { get; set; }
     }
-
-    [Then(@"Should return JSON data with Id and the time left should be less then (.*) minute")]
-    public void ThenShouldReturnJSONDataWithIdAndTheTimeLeftShouldBeLessThenMinute(int p0)
+    private class GetTimerResponse
     {
-        throw new PendingStepException();
-    }
-
-    [Then(@"Wait for (.*) minute")]
-    public void ThenWaitForMinute(int p0)
-    {
-        throw new PendingStepException();
-    }
-
-    [When(@"Get timer status API is called using the Id")]
-    public void WhenGetTimerStatusAPIIsCalledUsingTheId()
-    {
-        throw new PendingStepException();
-    }
-
-    [Then(@"Should return JSON data with Id and the time left should be (.*) minutes")]
-    public void ThenShouldReturnJSONDataWithIdAndTheTimeLeftShouldBeMinutes(int p0)
-    {
-        throw new PendingStepException();
-    }
-
-    private async Task<string> CallSetTimer()
-    {
-        var client = new RestClient();
-        var response = await client.PostAsync(new RestRequest(_url).AddJsonBody(new { Hours = 0, Minutes = 0, Seconds = 0, CallbackUrl = "" }));
-        return response.Content;
+        public string Id { get; set; }
+        public int time_left { get; set; }
     }
 }

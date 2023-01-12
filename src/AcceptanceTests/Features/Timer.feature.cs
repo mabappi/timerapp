@@ -92,14 +92,14 @@ The Get timer status take the id and returns the status time left of the call ba
             this.TestTearDown();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Call the set timer")]
+        [Xunit.SkippableFactAttribute(DisplayName="Setting the timer")]
         [Xunit.TraitAttribute("FeatureTitle", "Timer Rest Api")]
-        [Xunit.TraitAttribute("Description", "Call the set timer")]
-        public void CallTheSetTimer()
+        [Xunit.TraitAttribute("Description", "Setting the timer")]
+        public void SettingTheTimer()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Call the set timer", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Setting the timer", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 10
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -114,102 +114,42 @@ this.ScenarioInitialize(scenarioInfo);
 this.FeatureBackground();
 #line hidden
 #line 11
- testRunner.When("Set timer is called with no JSON payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("Set timer is called with empty Callback url", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 12
  testRunner.Then("Should return Bad Request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 13
- testRunner.When("Set timer is called with empty Callback url", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 14
- testRunner.Then("Should return Bad Request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 15
  testRunner.When("Set timer is called with 0 hours 1 minute and 0 seconds and callback url \"https:/" +
                         "/google.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 16
+#line 14
  testRunner.Then("Should return an Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 17
- testRunner.And("the url should be called after 1 minute", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 15
+ testRunner.When("Get tiemer status API is called using the Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 18
+#line 16
+ testRunner.Then("Should return JSON data with Id and the time left should be less then 1 minutes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 17
  testRunner.When("Set timer is called with 0 hours 0 minute and 0 seconds and callback url \"https:/" +
                         "/google.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
+#line 18
+ testRunner.Then("Should return an Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
 #line 19
- testRunner.Then("Should return an Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 20
- testRunner.And("the url should be called immetiately", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Call get timer API")]
-        [Xunit.TraitAttribute("FeatureTitle", "Timer Rest Api")]
-        [Xunit.TraitAttribute("Description", "Call get timer API")]
-        public void CallGetTimerAPI()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Call get timer API", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 22
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 7
-this.FeatureBackground();
-#line hidden
-#line 23
- testRunner.When("Get timer is call with empty Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 24
- testRunner.Then("Should return Bad Request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 25
- testRunner.When("Get timer is call with a not known Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 26
- testRunner.Then("Should return Not Found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 27
- testRunner.Given("Set timer is call with 0 hours 1 minute and 0 seconds and callback url \"https://g" +
-                        "oogle.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 28
- testRunner.Then("Should return an Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 29
  testRunner.When("Get tiemer status API is called using the Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 30
- testRunner.Then("Should return JSON data with Id and the time left should be less then 1 minute", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 20
+ testRunner.Then("Should return JSON data with Id and the time left should be 0 minute", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 31
- testRunner.Given("Set timer is call with 0 hours 1 minute and 0 seconds and callback url \"https://g" +
-                        "oogle.com\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 21
+ testRunner.When("Get timer is call with a not known Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 32
- testRunner.Then("Should return an Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 33
- testRunner.Then("Wait for 1 minute", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 34
- testRunner.When("Get timer status API is called using the Id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 35
- testRunner.Then("Should return JSON data with Id and the time left should be 0 minutes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 22
+ testRunner.Then("Should return Not Found", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

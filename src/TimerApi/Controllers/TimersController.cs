@@ -10,12 +10,19 @@ public class TimersController : Controller
     public TimersController(ITimerService timerService) => _timerService = timerService;
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTimer([FromRoute]string id) => 
-        string.IsNullOrEmpty(id) 
+        string.IsNullOrEmpty(id)
         ? BadRequest()
-        : Json(new { id, time_left = await _timerService.GetTimer(id) });
+        : await GetTimerInternal(id);
+        
     [HttpPost]
     public async Task<IActionResult> SetTimer(SetTimerRequest request) => 
         request == null
         ? BadRequest()
         : Json(new {id = await _timerService.SetTimer(request)});
+
+    private async Task<IActionResult> GetTimerInternal(string id)
+    {
+        var result = await _timerService.GetTimer(id);
+        return result == -1 ? NotFound() : Json(new { id, time_left = result });
+    }
 }
