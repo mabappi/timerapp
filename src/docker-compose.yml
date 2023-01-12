@@ -6,7 +6,7 @@ services:
     container_name: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: MyPassword
-      MYSQL_DATABASE: timerappdb
+      MYSQL_DATABASE: timerAppDb
       MYSQL_USER: apiuser
       MYSQL_PASSWORD: MyPassword
     networks:
@@ -41,6 +41,7 @@ services:
       context: .
       dockerfile: TimerApi/Dockerfile
     environment:
+      - ConnectionStrings__ConnectionString=server=mariadb;port=3306;database=timerAppDb;user=apiuser;password=MyPassword
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
     ports:

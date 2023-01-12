@@ -1,12 +1,17 @@
+using RestSharp;
+
 namespace AcceptanceTests.StepDefinitions;
 
 [Binding]
 public sealed class TimerStepDefinitions
 {
+    private string _url = "";
     [Given(@"The Rest Api endpoint is live")]
-    public void GivenTheRestApiEndpointIsLive()
+    public async Task GivenTheRestApiEndpointIsLive()
     {
-        throw new PendingStepException();
+        using var client = new HttpClient();
+        using var response = await client.GetAsync(_url);
+        response.EnsureSuccessStatusCode();
     }
 
     [When(@"Set timer is called with no JSON payload")]
@@ -105,5 +110,10 @@ public sealed class TimerStepDefinitions
         throw new PendingStepException();
     }
 
-
+    private async Task<string> CallSetTimer()
+    {
+        var client = new RestClient();
+        var response = await client.PostAsync(new RestRequest(_url).AddJsonBody(new { Hours = 0, Minutes = 0, Seconds = 0, CallbackUrl = "" }));
+        return response.Content;
+    }
 }
